@@ -13,16 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.zavedahmad.dnstoggle.data.DnsDomainEntry
 import com.zavedahmad.dnstoggle.ui.activities.MainActivity
 import com.zavedahmad.dnstoggle.ui.utilities.setPrivateDNS
 import com.zavedahmad.dnstoggle.ui.utilities.turnOffPrivateDns
 import com.zavedahmad.dnstoggle.viewModels.MainActivityViewModel
 
 @Composable
-fun ListOfDnsUi(viewModel: MainActivityViewModel) {
+fun ListOfDnsUi( list: List<DnsDomainEntry>) {
     val context = LocalContext.current
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        items(viewModel.entries) { entry ->
+        items(list) { entry ->
             Row(
                 modifier = Modifier.background(
                     MaterialTheme.colorScheme.primaryContainer

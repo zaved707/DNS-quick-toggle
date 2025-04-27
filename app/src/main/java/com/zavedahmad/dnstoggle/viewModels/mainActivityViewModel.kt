@@ -3,11 +3,15 @@ package com.zavedahmad.dnstoggle.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.zavedahmad.dnstoggle.data.DnsDomainEntry
+import com.zavedahmad.dnstoggle.data.DnsDomainEntryDao
 
-data class DnsDomainEntry(var domain: String)
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(val dnsDomainEntryDao: DnsDomainEntryDao) : ViewModel() {
     val inputText= mutableStateOf("")
-    val entries = mutableStateListOf(DnsDomainEntry("dns.adguard.com"),DnsDomainEntry("dns.fuckbitches.com"))
+
+    fun addDomain(entry: DnsDomainEntry){
+        dnsDomainEntryDao.insert(entry)
+    }
 
 }
