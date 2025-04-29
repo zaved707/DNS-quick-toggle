@@ -26,7 +26,7 @@ fun MainPage(context: Context, viewModel: MainActivityViewModel, itemList: List<
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Permission: " + hasWriteSecureSettingsPermission(context).toString())
-            Button(onClick = { turnOffPrivateDns(context) }) {
+            Button(onClick = { turnOffPrivateDns(context) ; viewModel.offDNS() }) {
                 Text("Turn off dns")
             }
 
@@ -34,6 +34,6 @@ fun MainPage(context: Context, viewModel: MainActivityViewModel, itemList: List<
         Text("Your Domains")
 
 
-        ListOfDnsUi(itemList)
+        ListOfDnsUi(itemList,viewModel)
     }
 }

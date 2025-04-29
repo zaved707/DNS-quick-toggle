@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
                                 Text("PrivaeDnsToggle")
                             },
                             actions = {
-                                IconButton(onClick = { uriHandler.openUri("http://www.github.com/zaved707/OpenInWhatsapp_Kotlin_1") }) {
+                                IconButton(onClick = { uriHandler.openUri("http://www.github.com/zaved707/") }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.github_mark),
                                         contentDescription = "go to my github",

@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
 import com.zavedahmad.dnstoggle.data.DnsDomainEntryDao
+import kotlinx.coroutines.launch
 
 
 class MainActivityViewModel(val dnsDomainEntryDao: DnsDomainEntryDao) : ViewModel() {
@@ -22,6 +24,19 @@ class MainActivityViewModel(val dnsDomainEntryDao: DnsDomainEntryDao) : ViewMode
     }
     fun addDomain(entry: DnsDomainEntry){
         dnsDomainEntryDao.insert(entry)
+    }
+    fun setActiveEntry(entryId: Int) {
+        viewModelScope.launch {
+            dnsDomainEntryDao.setActiveEntry(entryId)
+        }
+    }
+    fun offDNS(){
+        viewModelScope.launch { dnsDomainEntryDao.deactivateAll() }
+    }
+    fun deleteDNS(entryId: Int){
+        viewModelScope.launch {
+            dnsDomainEntryDao.deleteEntry(entryId)
+        }
     }
 
 }

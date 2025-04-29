@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
@@ -26,22 +27,48 @@ import com.zavedahmad.dnstoggle.ui.utilities.turnOffPrivateDns
 import com.zavedahmad.dnstoggle.viewModels.MainActivityViewModel
 
 @Composable
-fun ListOfDnsUi( list: List<DnsDomainEntry>) {
+fun ListOfDnsUi(list: List<DnsDomainEntry>, viewModel: MainActivityViewModel) {
     val context = LocalContext.current
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         items(list) { entry ->
-            Column (
-                modifier = Modifier.clip(shape = RoundedCornerShape(20.dp)).background(
-                    MaterialTheme.colorScheme.primaryContainer
-                ).padding(20.dp).fillMaxWidth(),
+            Column(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .background(
+                        if (entry.isActive) {
+                            Color(0xFF4CAF50)
+                        } else {
+                            MaterialTheme.colorScheme.onError
+                        }
+                    )
+                    .padding(20.dp)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(entry.domain, color = MaterialTheme.colorScheme.onPrimaryContainer, modifier = Modifier.fillMaxWidth().clip(
-                    RoundedCornerShape(10.dp)).background(MaterialTheme.colorScheme.background).padding(10.dp))
-                Button(onClick = { setPrivateDNS(context, entry.domain) }) {
-                    Text("Turn On Dns")
+                Text(
+                    entry.domain,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(10.dp)
+                        )
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(10.dp)
+                )
+                Row (horizontalArrangement = Arrangement.SpaceBetween , modifier = Modifier.fillMaxWidth()){
+                    Button(onClick = {
+                        viewModel.setActiveEntry(entry.id)
+                        setPrivateDNS(context, entry.domain)
+                    }) {
+                        Text("Turn On Dns")
+                    }
+                    Button(onClick = {
+                        viewModel.deleteDNS(entry.id)
+                    }) {
+                        Text("Delete Dns")
+                    }
                 }
-
             }
         }
     }

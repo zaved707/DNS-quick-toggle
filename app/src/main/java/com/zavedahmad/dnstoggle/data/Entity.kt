@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "dns_entries")
 data class DnsDomainEntry(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val domain: String
+    val domain: String,
+    val isActive: Boolean = false
 )

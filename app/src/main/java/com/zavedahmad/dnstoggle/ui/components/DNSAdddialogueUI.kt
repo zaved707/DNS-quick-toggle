@@ -9,13 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
 import com.zavedahmad.dnstoggle.viewModels.MainActivityViewModel
 
@@ -31,13 +34,13 @@ fun DNSAddDialogueUI(viewModel: MainActivityViewModel) {
         Column (modifier = Modifier.fillMaxSize().padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween){
-            Text("Write Your DNS Domain below")
+            Text("Write Your DNS Domain" , fontSize = 20.sp, textAlign = TextAlign.Center)
             OutlinedTextField(
                 onValueChange = { viewModel.inputText.value = it },
                 value = viewModel.inputText.value
 
             )
-            Button(onClick = {
+            ElevatedButton (onClick = {
                 viewModel.addDomain(DnsDomainEntry(domain = viewModel.inputText.value))
                 viewModel.hideDNSDialogue()
                 viewModel.inputText.value=""
