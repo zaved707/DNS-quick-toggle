@@ -8,13 +8,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,8 +43,15 @@ import com.zavedahmad.dnstoggle.ui.utilities.turnOffPrivateDns
 import androidx.lifecycle.ViewModelProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModel
+import com.zavedahmad.dnstoggle.R
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
+import com.zavedahmad.dnstoggle.ui.components.DNSAddDialogueUI
+import com.zavedahmad.dnstoggle.ui.pages.MainPage
 import kotlin.toString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +61,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val db =
-            Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dnsName_db").allowMainThreadQueries().build()
+            Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dnsName_db")
+                .allowMainThreadQueries().build()
         val dao = db.dnsDomainEntryDao()
         setContent {
             val viewModel: MainActivityViewModel = viewModel(
@@ -60,55 +74,48 @@ class MainActivity : ComponentActivity() {
                 }
             )
             val itemList by dao.getAllEntries().collectAsState(initial = emptyList())
-
+            val uriHandler= LocalUriHandler.current
             Log.d("DNS_Setting", "Current user ID: ")
 
             DNSToggleTheme {
-                Scaffold(modifier = Modifier.Companion.fillMaxSize(), topBar = {
-                    TopAppBar(
-                        colors = topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        ),
-                        title = {
-                            Text("PrivaeDnsToggle")
-                        }
-                    )
-                }) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    floatingActionButton = { LargeFloatingActionButton(onClick = {viewModel.showDNSDialogue()}) { Icon(painter = painterResource(id = R.drawable.baseline_add_24, ), contentDescription = "add New DNS") } },
+                    topBar = {
+                        TopAppBar(
+                            colors = topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            ),
+                            title = {
+                                Text("PrivaeDnsToggle")
+                            },
+                            actions = {
+                                IconButton(onClick = { uriHandler.openUri("http://www.github.com/zaved707/OpenInWhatsapp_Kotlin_1")}) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.github_mark),
+                                        contentDescription = "go to my github",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                            }
+                        )
+                    }) { innerPadding ->
 
-                    Column(
+                    if (viewModel.DNSAddDialogueState.value){
+                        Dialog(onDismissRequest = {viewModel.hideDNSDialogue()}) {
+                            DNSAddDialogueUI(viewModel)
+                        }
+                    }
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                             .padding(innerPadding),
 
                         ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Permission: " + hasWriteSecureSettingsPermission(this@MainActivity).toString())
-                            Button(onClick = { turnOffPrivateDns(this@MainActivity) }) {
-                                Text("Turn off dns")
-                            }
-
-                        }
-
-                        Row {
-
-
-                            TextField(
-                                onValueChange = { viewModel.inputText.value = it },
-                                value = viewModel.inputText.value
-                            )
-                            Button(onClick = {
-                                viewModel.addDomain(DnsDomainEntry(domain = viewModel.inputText.value))
-                            }) {
-                                Text("Add Dns")
-                            }
-                        }
-
-                        ListOfDnsUi(itemList)
+                        MainPage(this@MainActivity ,viewModel, itemList )
                     }
                 }
             }
