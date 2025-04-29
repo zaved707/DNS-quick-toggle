@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.mutableStateOf
@@ -58,8 +59,10 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
-            var itemList by remember { mutableStateOf(dao.getAllEntries()) }
+            val itemList by dao.getAllEntries().collectAsState(initial = emptyList())
+
             Log.d("DNS_Setting", "Current user ID: ")
+
             DNSToggleTheme {
                 Scaffold(modifier = Modifier.Companion.fillMaxSize(), topBar = {
                     TopAppBar(
@@ -72,6 +75,7 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }) { innerPadding ->
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -103,7 +107,7 @@ class MainActivity : ComponentActivity() {
                                 Text("Add Dns")
                             }
                         }
-                        Text(text = itemList.toString(), color = MaterialTheme.colorScheme.onBackground)
+
                         ListOfDnsUi(itemList)
                     }
                 }

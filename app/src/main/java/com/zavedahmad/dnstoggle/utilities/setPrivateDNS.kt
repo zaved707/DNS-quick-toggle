@@ -49,7 +49,7 @@ fun  turnOffPrivateDns(context: Context){
         ) // 2 = strict hostname mode (DoT)
         Log.d("DNS_Setting", "private_dns_mode set to 0")
         // Set AdGuard DNS hostname
-
+        Toast.makeText(context, "DNS is turned off", Toast.LENGTH_SHORT).show()
         // Verify settings
 
     }catch (e: SecurityException) {

@@ -11,7 +11,7 @@ interface DnsDomainEntryDao {
     fun insert(entry: DnsDomainEntry)
 
     @Query("SELECT * FROM dns_entries")
-    fun getAllEntries():List<DnsDomainEntry>
+    fun getAllEntries(): Flow<List<DnsDomainEntry>>
 
     @Query("DELETE FROM dns_entries")
     fun deleteAll()
