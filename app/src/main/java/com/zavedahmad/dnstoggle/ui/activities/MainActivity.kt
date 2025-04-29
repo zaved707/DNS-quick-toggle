@@ -13,16 +13,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -74,13 +77,20 @@ class MainActivity : ComponentActivity() {
                 }
             )
             val itemList by dao.getAllEntries().collectAsState(initial = emptyList())
-            val uriHandler= LocalUriHandler.current
+            val uriHandler = LocalUriHandler.current
             Log.d("DNS_Setting", "Current user ID: ")
 
             DNSToggleTheme {
                 Scaffold(
                     modifier = Modifier.Companion.fillMaxSize(),
-                    floatingActionButton = { LargeFloatingActionButton(onClick = {viewModel.showDNSDialogue()}) { Icon(painter = painterResource(id = R.drawable.baseline_add_24, ), contentDescription = "add New DNS") } },
+                    floatingActionButton = {
+                        FloatingActionButton(onClick = { viewModel.showDNSDialogue() }, modifier = Modifier.offset(x=-20.dp,y=-50.dp), containerColor = MaterialTheme.colorScheme.secondary , contentColor = MaterialTheme.colorScheme.onSecondary) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_add_24),
+                                contentDescription = "add New DNS"
+                            )
+                        }
+                    },
                     topBar = {
                         TopAppBar(
                             colors = topAppBarColors(
@@ -91,7 +101,7 @@ class MainActivity : ComponentActivity() {
                                 Text("PrivaeDnsToggle")
                             },
                             actions = {
-                                IconButton(onClick = { uriHandler.openUri("http://www.github.com/zaved707/OpenInWhatsapp_Kotlin_1")}) {
+                                IconButton(onClick = { uriHandler.openUri("http://www.github.com/zaved707/OpenInWhatsapp_Kotlin_1") }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.github_mark),
                                         contentDescription = "go to my github",
@@ -103,8 +113,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }) { innerPadding ->
 
-                    if (viewModel.DNSAddDialogueState.value){
-                        Dialog(onDismissRequest = {viewModel.hideDNSDialogue()}) {
+                    if (viewModel.DNSAddDialogueState.value) {
+                        Dialog(onDismissRequest = { viewModel.hideDNSDialogue() }) {
                             DNSAddDialogueUI(viewModel)
                         }
                     }
@@ -115,7 +125,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
 
                         ) {
-                        MainPage(this@MainActivity ,viewModel, itemList )
+                        MainPage(this@MainActivity, viewModel, itemList)
                     }
                 }
             }
