@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.zavedahmad.dnstoggle.R
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
 import com.zavedahmad.dnstoggle.ui.activities.MainActivity
 import com.zavedahmad.dnstoggle.ui.utilities.setPrivateDNS
@@ -63,10 +67,10 @@ fun ListOfDnsUi(list: List<DnsDomainEntry>, viewModel: MainActivityViewModel) {
                     }) {
                         Text("Turn On Dns")
                     }
-                    Button(onClick = {
+                    IconButton (onClick = {
                         viewModel.deleteDNS(entry.id)
                     }) {
-                        Text("Delete Dns")
+                        Icon(painter = painterResource(id = R.drawable.delete), contentDescription = "delete this shit ")
                     }
                 }
             }
