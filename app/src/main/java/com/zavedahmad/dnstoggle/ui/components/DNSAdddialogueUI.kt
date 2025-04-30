@@ -14,38 +14,65 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zavedahmad.dnstoggle.data.DnsDomainEntry
 import com.zavedahmad.dnstoggle.viewModels.MainActivityViewModel
-
 @Composable
 fun DNSAddDialogueUI(viewModel: MainActivityViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            ,
+            .height(200.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceBright)
     ) {
-        Column (modifier = Modifier.fillMaxSize().padding(20.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween){
-            Text("Write Your DNS Domain" , fontSize = 20.sp, textAlign = TextAlign.Center)
-            OutlinedTextField(
-                onValueChange = { viewModel.inputText.value = it },
-                value = viewModel.inputText.value
-
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Write Your DNS Domain",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
             )
-            ElevatedButton (onClick = {
-                viewModel.addDomain(DnsDomainEntry(domain = viewModel.inputText.value))
-                viewModel.hideDNSDialogue()
-                viewModel.inputText.value=""
-            }) {
-                Text("Add Dns")
+            // FocusRequester for the TextField
+            val focusRequester = remember { FocusRequester() }
+            // Optional: Keyboard controller to ensure keyboard shows
+            val keyboardController = LocalSoftwareKeyboardController.current
+
+            OutlinedTextField(
+                value = viewModel.inputText.value,
+                onValueChange = { viewModel.inputText.value = it },
+                modifier = Modifier
+                    .fillMaxWidth() // Ensure TextField takes available width
+                    .focusRequester(focusRequester), // Attach FocusRequester
+                label = { Text("DNS Domain") } // Optional: Add a label for clarity
+            )
+            ElevatedButton(
+                onClick = {
+                    viewModel.addDomain(DnsDomainEntry(domain = viewModel.inputText.value))
+                    viewModel.hideDNSDialogue()
+                    viewModel.inputText.value = ""
+                }
+            ) {
+                Text("Add DNS")
+            }
+
+            // Request focus and show keyboard when the dialog appears
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+                keyboardController?.show() // Explicitly show the keyboard
             }
         }
     }

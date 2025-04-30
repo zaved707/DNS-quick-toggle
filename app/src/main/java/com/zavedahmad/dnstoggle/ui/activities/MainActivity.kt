@@ -23,12 +23,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -46,6 +49,7 @@ import com.zavedahmad.dnstoggle.ui.utilities.turnOffPrivateDns
 import androidx.lifecycle.ViewModelProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -79,10 +83,10 @@ class MainActivity : ComponentActivity() {
             val itemList by dao.getAllEntries().collectAsState(initial = emptyList())
             val uriHandler = LocalUriHandler.current
             Log.d("DNS_Setting", "Current user ID: ")
-
+            val scrollBehaviour=TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             DNSToggleTheme {
                 Scaffold(
-                    modifier = Modifier.Companion.fillMaxSize(),
+                    modifier = Modifier.Companion.fillMaxSize().nestedScroll(scrollBehaviour.nestedScrollConnection),
                     floatingActionButton = {
                         FloatingActionButton(onClick = { viewModel.showDNSDialogue() }, modifier = Modifier.offset(x=-20.dp,y=-50.dp), containerColor = MaterialTheme.colorScheme.secondary , contentColor = MaterialTheme.colorScheme.onSecondary) {
                             Icon(
@@ -92,9 +96,10 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     topBar = {
-                        TopAppBar(
+                        MediumTopAppBar(
+                            scrollBehavior = scrollBehaviour,
                             colors = topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+
                                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             ),
                             title = {

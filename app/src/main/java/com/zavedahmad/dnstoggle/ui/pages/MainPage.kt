@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,13 +22,16 @@ import com.zavedahmad.dnstoggle.viewModels.MainActivityViewModel
 
 @Composable
 fun MainPage(context: Context, viewModel: MainActivityViewModel, itemList: List<DnsDomainEntry>) {
-    Column (modifier = Modifier.padding(20.dp)){
+
+    Column(modifier = Modifier
+        .padding(20.dp)
+        ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Permission: " + hasWriteSecureSettingsPermission(context).toString())
-            Button(onClick = { turnOffPrivateDns(context) ; viewModel.offDNS() }) {
+            Button(onClick = { turnOffPrivateDns(context); viewModel.offDNS() }) {
                 Text("Turn off dns")
             }
 
@@ -34,6 +39,6 @@ fun MainPage(context: Context, viewModel: MainActivityViewModel, itemList: List<
         Text("Your Domains")
 
 
-        ListOfDnsUi(itemList,viewModel)
+        ListOfDnsUi(itemList, viewModel)
     }
 }

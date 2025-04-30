@@ -18,10 +18,17 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    splits {
+        abi {
+            isEnable = true
+            reset() // Clears the default list of ABIs
+            include("arm64-v8a") // Only include arm64-v8a
+            isUniversalApk = false // Disable universal APK (optional, if you don't want a universal APK)
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
